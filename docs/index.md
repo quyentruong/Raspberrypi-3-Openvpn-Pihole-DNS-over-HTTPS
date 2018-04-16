@@ -10,14 +10,18 @@ Read instruction at [this page](https://www.raspberrypi.org/help/noobs-setup/2/)
 
 ## 3. Openvpn
 * I used PiVPN. Copy this command in terminal.
+
 ```bash
 curl -L https://install.pivpn.io | bash
+
 ```
 * For step-by-step, [watch this video](https://www.youtube.com/watch?v=9RSHSt4RuLk)
 * After finished, reboot Pi to let tun0 show up when setup pihole.
+
 ```bash
 sudo reboot
 ```
+
 ## 4. Pihole
 
 ### For those who already installed pihole 
@@ -61,6 +65,7 @@ You should choose `on` to easy manage logs.
 * Edit the file /etc/openvpn/server.conf via `sudo nano /etc/openvpn/server.conf`.
 * Make sure to have line 10-16 like my setting below. And change `192.168.x.x` to your Pi's IP address
 * If you want VPN only run query (it may help run faster if the upload speed of server is slow), comment out line 22.
+
 ```bash=
 dev tun
 proto udp
@@ -105,8 +110,8 @@ verb 3
 #Remove # if you will manage access by user instead of device. 
 #duplicate-cn
 # Generated for use by PiVPN.io
-
 ```
+
 * Close and save the file with Ctrl+X, enter y, enter.
 * Restart OpenVPN via `sudo systemctl restart openvpn`
 
