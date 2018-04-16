@@ -49,3 +49,17 @@ Make sure IP address matches with your Pi and Gateway matches with your router.
 You should choose `on` to easy manage logs.
 
 ## 5. DNS-over-HTTPS
+
+```bash
+[Unit]
+Description=CloudFlare DNS over HTTPS Proxy
+Wants=network-online.target
+After=network.target network-online.target
+ 
+[Service]
+ExecStart=/home/pi/argo-tunnel/cloudflared proxy-dns --port 54 --upstream https://1.1.1.1/.well-known/dns-query --upstream https://1.0.0.1/.well-known/dns-query
+Restart=on-abort
+ 
+[Install]
+WantedBy=multi-user.target
+```
