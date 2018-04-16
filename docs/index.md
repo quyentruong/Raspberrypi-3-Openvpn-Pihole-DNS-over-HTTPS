@@ -126,9 +126,11 @@ sudo /usr/local/bin/cloudflared proxy-dns --port 54 --upstream https://1.1.1.1/.
 
 ![cloudflare](https://github.com/quyentruong/Raspberrypi-3-Openvpn-Pihole-DNS-over-HTTPS/blob/master/docs/assets/image/cloudflare.PNG?raw=true "cloudflare")
 * If everything is all setup and running just fine, the last step is to make sure cloudflared is always running. To do this, we will create a systemd unit file to make sure of that.
+
 ```bash
 sudo nano /etc/systemd/system/dnsproxy.service
 ```
+
 ```bash
 [Unit]
 Description=CloudFlare DNS over HTTPS Proxy
@@ -142,9 +144,12 @@ Restart=on-abort
 [Install]
 WantedBy=multi-user.target
 ```
+
 * Close and save the file with Ctrl+X, enter y, enter.
 * To ensure cloudflared runs on startup you have to enable it with the following.
+
 ```bash
 sudo systemctl enable dnsproxy.service
 ```
+
 * Now cloudflared will start on system boot and restart if it crashes meaning it should always be available.
