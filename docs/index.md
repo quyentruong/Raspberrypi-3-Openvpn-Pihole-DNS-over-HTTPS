@@ -63,10 +63,10 @@ You should choose `on` to easy manage logs.
 * Replace the second IP with your Raspberry Pi local network IP and the third IP is the tun0 interface.
 * Restart DNSMasq via `sudo systemctl restart dnsmasq`.
 * Edit the file /etc/openvpn/server.conf via `sudo nano /etc/openvpn/server.conf`.
-* Make sure to have line 10-16 like my setting below. And change `192.168.x.x` to your Pi's IP address
-* If you want VPN only run query (it may help run faster if the upload speed of server is slow), comment out line 22.
+* Make sure to have lines between `###`. And change `192.168.x.x` to your Pi's IP address
+* If you want VPN only run query (it may help run faster if the upload speed of server is slow), comment out `push "redirect-gateway def1"`.
 
-```bash {.line-numbers}
+```bash
 dev tun
 proto udp
 port 11943
@@ -76,6 +76,7 @@ key /etc/openvpn/easy-rsa/pki/private/server_ow2eJpQfeONY9S4s.key
 dh none
 topology subnet
 server 10.8.0.0 255.255.255.0
+### Requirement
 # server and remote endpoints
 ifconfig 10.8.0.1 10.8.0.2
 # Set your primary domain name server address for clients
@@ -83,6 +84,7 @@ push "route 10.8.0.1 255.255.255.255"
 push "route 10.8.0.0 255.255.255.0"
 push "route 192.168.x.x 255.255.255.255" # Change to your Pi's IP adress 
 push "dhcp-option DNS 192.168.x.x" # Change to your Pi's IP adress
+###
 # Prevent DNS leaks on Windows
 push "block-outside-dns"
 # Override the Client default gateway by using 0.0.0.0/1 and
