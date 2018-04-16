@@ -66,7 +66,7 @@ You should choose `on` to easy manage logs.
 * Make sure to have line 10-16 like my setting below. And change `192.168.x.x` to your Pi's IP address
 * If you want VPN only run query (it may help run faster if the upload speed of server is slow), comment out line 22.
 
-```bash=
+```bash {.line-numbers}
 dev tun
 proto udp
 port 11943
