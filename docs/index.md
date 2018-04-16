@@ -120,6 +120,7 @@ verb 3
 ## 6. DNS-over-HTTPS [Optional]
 
 * Copy these commands to terminal.
+
 ```bash
 cd ~
 wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-arm.tgz
@@ -129,6 +130,7 @@ rm cloudflared-stable-linux-arm.tgz
 sudo cp ./argo-tunnel /usr/local/bin/
 sudo /usr/local/bin/cloudflared proxy-dns --port 54 --upstream https://1.1.1.1/.well-known/dns-query --upstream https://1.0.0.1/.well-known/dns-query
 ```
+
 * Make sure it runs like the image below.
 
 ![cloudflare](https://github.com/quyentruong/Raspberrypi-3-Openvpn-Pihole-DNS-over-HTTPS/blob/master/docs/assets/image/cloudflare.PNG?raw=true "cloudflare")
