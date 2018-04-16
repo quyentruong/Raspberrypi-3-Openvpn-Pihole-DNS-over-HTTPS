@@ -1,4 +1,4 @@
-# Guild for Raspberrypi 3 to setup Openvpn + Pihole + DNS-over-HTTPS
+# Guide for Raspberrypi 3 to setup Openvpn + Pihole + DNS-over-HTTPS
 
 ## 1. Prerequisite
 * Raspberry Pi 3 or 3+
@@ -32,7 +32,7 @@ sudo nano /etc/pihole/setupVars.conf
 * Change the line `PIHOLE_INTERFACE=eth0` to `PIHOLE_INTERFACE=tun0`
 * Close and save the file with Ctrl+X, enter y, enter.
 
-### For those who hasn't install pihole yet.
+### For those who haven't installed pihole yet.
 
 #### Copy this command in terminal.
 ```bash
