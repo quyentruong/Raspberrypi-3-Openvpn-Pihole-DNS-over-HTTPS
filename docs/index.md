@@ -13,9 +13,9 @@ Read instruction at [this page](https://www.raspberrypi.org/help/noobs-setup/2/)
 
 ```bash
 curl -L https://install.pivpn.io | bash
-
 ```
-* For step-by-step, [watch this video](https://www.youtube.com/watch?v=9RSHSt4RuLk)
+
+* For step-by-step, [watch this video](https://www.youtube.com/watch?v=9RSHSt4RuLk). I used default setting like the video. Only part about port I chose 11943 (You can choose any number that is greater than 1024).
 * After finished, reboot Pi to let tun0 show up when setup pihole.
 
 ```bash
@@ -160,3 +160,15 @@ sudo systemctl enable dnsproxy.service
 ```
 
 * Now cloudflared will start on system boot and restart if it crashes meaning it should always be available.
+
+## 7. Setup Pihole to run with DNS-over-HTTPS
+
+* Create an additional DNSMasq configuration file: `sudo nano /etc/dnsmasq.d/02-dnscrypt.conf`.
+* Enter the following in the file: `server=127.10.10.1#54`.
+* If you did section 6, you have to do this one.
+* Edit 01-pihole.conf: `sudo nano /etc/dnsmasq.d/01-pihole.conf`.
+* Comment (#) out all server references, which means everything which looks like: `#server=...`
+* Edit setupVars.conf: `sudo nano /etc/pihole/setupVars.conf`.
+* Comment (#) out all piholeDNS references: `#PIHOLE_DNS_=...`.
+* Restart DNSMasq: `sudo systemctl restart dnsmasq`.
+* Reboot Raspberry Pi the last time with: `sudo reboot`.
