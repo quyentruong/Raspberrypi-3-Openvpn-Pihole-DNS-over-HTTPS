@@ -15,7 +15,7 @@ Read instruction at [this page](https://www.raspberrypi.org/help/noobs-setup/2/)
 curl -L https://install.pivpn.io | bash
 ```
 
-* For step-by-step, [watch this video](https://www.youtube.com/watch?v=9RSHSt4RuLk). I used default setting like the video. Only part about port I chose 11943 (You can choose any number that is greater than 1024).
+* For step-by-step, [watch this video](https://www.youtube.com/watch?v=9RSHSt4RuLk). I used default setting like the video. Only part about ip, I chose 10.8.0.1. And about port, I chose 11943 (You can choose any number that is greater than 1024).
 * After finished, reboot Pi to let tun0 show up when setup pihole.
 
 ```bash
@@ -127,7 +127,7 @@ wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-arm.tgz
 mkdir argo-tunnel
 tar -xvzf cloudflared-stable-linux-arm.tgz -C ./argo-tunnel
 rm cloudflared-stable-linux-arm.tgz
-sudo cp ./argo-tunnel /usr/local/bin/
+sudo cp ./argo-tunnel/cloudflared /usr/local/bin/
 sudo /usr/local/bin/cloudflared proxy-dns --port 54 --upstream https://1.1.1.1/.well-known/dns-query --upstream https://1.0.0.1/.well-known/dns-query
 ```
 
@@ -166,7 +166,7 @@ sudo systemctl enable dnsproxy.service
 ## 7. Setup Pihole to run with DNS-over-HTTPS
 
 * Create an additional DNSMasq configuration file: `sudo nano /etc/dnsmasq.d/02-dnscrypt.conf`.
-* Enter the following in the file: `server=127.10.10.1#54`.
+* Enter the following in the file: `server=127.0.0.1#54`.
 * If you did section 6, you have to do this one.
 * Edit 01-pihole.conf: `sudo nano /etc/dnsmasq.d/01-pihole.conf`.
 * Comment (#) out all server references, which means everything which looks like: `#server=...`
