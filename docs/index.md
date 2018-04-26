@@ -58,8 +58,8 @@ You should choose `on` to easy manage logs.
 
 ## 5. Setup OpenVPN to run with Pihole
 
-* Edit /etc/dnsmasq.conf via: `sudo nano /etc/dnsmasq.conf`.
-* Modify #listen-address= to: listen-address=127.0.0.1, 192.168.x.x, 10.8.0.1.
+* Create an additional DNSMasq configuration file: `sudo nano /etc/dnsmasq.d/03-vpn.conf`.
+* Enter the following in the file: `listen-address=127.0.0.1, 192.168.x.x, 10.8.0.1`.
 * Replace the second IP with your Raspberry Pi local network IP and the third IP is the tun0 interface.
 * Restart DNSMasq via `sudo systemctl restart dnsmasq`.
 * Edit the file /etc/openvpn/server.conf via `sudo nano /etc/openvpn/server.conf`.
