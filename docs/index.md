@@ -174,3 +174,7 @@ sudo systemctl enable dnsproxy.service
 * Comment (#) out all piholeDNS references: `#PIHOLE_DNS_=...`.
 * Restart DNSMasq: `sudo systemctl restart dnsmasq`.
 * Reboot Raspberry Pi the last time with: `sudo reboot`.
+
+## Warning Pihole 4.0 and up
+
+If you want to show block page, follow this configuration https://docs.pi-hole.net/ftldns/blockingmode/
