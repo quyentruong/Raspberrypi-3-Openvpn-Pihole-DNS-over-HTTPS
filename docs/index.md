@@ -177,4 +177,4 @@ sudo systemctl enable dnsproxy.service
 
 ## Warning Pihole 4.0 and up
 
-If you want to show block page, follow this configuration https://docs.pi-hole.net/ftldns/blockingmode/
+If you want to show block page, follow this configuration [https://docs.pi-hole.net/ftldns/blockingmode/](https://docs.pi-hole.net/ftldns/blockingmode/)
