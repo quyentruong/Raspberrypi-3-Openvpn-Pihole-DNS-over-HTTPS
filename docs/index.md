@@ -178,3 +178,16 @@ sudo systemctl enable dnsproxy.service
 ## Warning Pihole 4.0 and up
 
 If you want to show block page, follow this configuration [https://docs.pi-hole.net/ftldns/blockingmode/](https://docs.pi-hole.net/ftldns/blockingmode/)
+
+## 8. Pihole 5.0 and up Export Blocklist to use anywhere.
+
+* Go to /etc/pihole
+* Run 
+```
+sqlite3 gravity.db "select domain from gravity
+union
+select domain from domainlist where type = 1
+except
+select domain from domainlist where type = 0;" > mybiglist.txt
+```
+* Then host `mybiglist.txt` in anywhere to use for Adguard or Blockada for Android
