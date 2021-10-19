@@ -191,3 +191,5 @@ except
 select domain from domainlist where type = 0;" > mybiglist.txt
 ```
 * Then host `mybiglist.txt` in anywhere to use for Adguard or Blockada for Android
+
+[Next - Oracle Cloud to setup Openvpn + Pihole](https://quyentruong.github.io/Raspberrypi-3-Openvpn-Pihole-DNS-over-HTTPS/oracle.html)
