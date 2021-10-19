@@ -14,7 +14,9 @@
 * In the Instance information, click on `subnet-xxx` -> `Default Security List xxx` -> `Add Ingrss Rules`
   * Source CIDR: 0.0.0.0/0
   * IP Protocol: UDP
-  * Destination Port: 1194  
+  * Destination Port: 1194
+
+* To connect to the instance, follow this [guide](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/accessinginstance.htm)
 
 ## 3. Install Openvpn
 * I used PiVPN. Need root access. Copy these commands in terminal.
@@ -57,77 +59,56 @@ curl -L https://install.pivpn.io | bash
   * Close and save the file with Ctrl+X, enter y, enter.
   * Restart OpenVPN via `sudo systemctl restart openvpn@server.service`
 
-## 6. DNS-over-HTTPS [Optional]
-
-* Copy these commands to terminal.
-
-```bash
-cd ~
-wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-arm.tgz
-mkdir argo-tunnel
-tar -xvzf cloudflared-stable-linux-arm.tgz -C ./argo-tunnel
-rm cloudflared-stable-linux-arm.tgz
-sudo cp ./argo-tunnel/cloudflared /usr/local/bin/
-sudo /usr/local/bin/cloudflared proxy-dns --port 54 --upstream https://1.1.1.1/.well-known/dns-query --upstream https://1.0.0.1/.well-known/dns-query
-```
-
-* Make sure it runs like the image below.
-
-![cloudflare](https://github.com/quyentruong/Raspberrypi-3-Openvpn-Pihole-DNS-over-HTTPS/blob/master/docs/assets/image/cloudflare.PNG?raw=true "cloudflare")
-* If everything is all setup and running just fine, the last step is to make sure cloudflared is always running. To do this, we will create a systemd unit file to make sure of that.
+## 6. Allow port in iptables
+By default, the OS doesn't allow tun0 interface. We need tun0 to allow openvpn and pihole work. [More information](https://docs.pi-hole.net/guides/vpn/openvpn/firewall/)
 
 ```bash
-sudo nano /etc/systemd/system/dnsproxy.service
+sudo su - root
+iptables -I INPUT -i tun0 -m comment --comment "# enable tun0 for pihole #" -j ACCEPT
+iptables-save > /etc/pihole/rules.v4
 ```
+## 7. Access web page on Internet [Optional]
 
+Need to allow port 80 in iptables
 ```bash
-[Unit]
-Description=CloudFlare DNS over HTTPS Proxy
-Wants=network-online.target
-After=network.target network-online.target
- 
-[Service]
-ExecStart=/usr/local/bin/cloudflared proxy-dns --port 54 --upstream https://1.1.1.1/.well-known/dns-query --upstream https://1.0.0.1/.well-known/dns-query
-Restart=on-abort
- 
-[Install]
-WantedBy=multi-user.target
+iptables -I INPUT -i ens3 -p tcp --dport 80 -m comment --comment "# http #" -j ACCEPT
 ```
 
-* Close and save the file with Ctrl+X, enter y, enter.
-* To ensure cloudflared runs on startup you have to enable it with the following.
+* In the Instance information, click on `subnet-xxx` -> `Default Security List xxx` -> `Add Ingrss Rules`
+  * Source CIDR: 0.0.0.0/0
+  * IP Protocol: TCP
+  * Destination Port: 80
 
+## 8. Setup DDNS [Optinal]
+I use dynu.com. [IP Update Protocol](https://www.dynu.com/en-US/DynamicDNS/IP-Update-Protocol)
+
+Password should be MD5/SHA-256 hash
 ```bash
-sudo systemctl enable dnsproxy.service
+wget "https://api.dynu.com/nic/update?hostname=example.com&password=098f6bcd4621d373cade4e832627b4f6" -O /dev/null
 ```
 
-* Now cloudflared will start on system boot and restart if it crashes meaning it should always be available.
-
-## 7. Setup Pihole to run with DNS-over-HTTPS
-
-* Create an additional DNSMasq configuration file: `sudo nano /etc/dnsmasq.d/02-dnscrypt.conf`.
-* Enter the following in the file: `server=127.0.0.1#54`.
-* If you did section 6, you have to do this one.
-* Edit 01-pihole.conf: `sudo nano /etc/dnsmasq.d/01-pihole.conf`.
-* Comment (#) out all server references, which means everything which looks like: `#server=...`
-* Edit setupVars.conf: `sudo nano /etc/pihole/setupVars.conf`.
-* Comment (#) out all piholeDNS references: `#PIHOLE_DNS_=...`.
-* Restart DNSMasq: `sudo systemctl restart dnsmasq`.
-* Reboot Raspberry Pi the last time with: `sudo reboot`.
-
-## Warning Pihole 4.0 and up
-
-If you want to show block page, follow this configuration [https://docs.pi-hole.net/ftldns/blockingmode/](https://docs.pi-hole.net/ftldns/blockingmode/)
-
-## 8. Pihole 5.0 and up Export Blocklist to use anywhere.
-
-* Go to /etc/pihole
-* Run 
+* Setup crontab to auto update IP
+```bash
+crontab -e
 ```
-sqlite3 gravity.db "select domain from gravity
-union
-select domain from domainlist where type = 1
-except
-select domain from domainlist where type = 0;" > mybiglist.txt
+Choose nano. Then put at the end of the file
+```bash
+30 * * * * /usr/bin/wget "https://api.dynu.com/nic/update?hostname=example.com&password=098f6bcd4621d373cade4e832627b4f6" -O /dev/null
 ```
-* Then host `mybiglist.txt` in anywhere to use for Adguard or Blockada for Android
+Press `Ctrl + x` and Y
+
+## 9. Create LetsEncrypt for DDNS [Optional]
+
+Setup acme for auto renew LetsEncrypt certificate.
+```bash
+git clone https://github.com/acmesh-official/acme.sh.git
+cd ./acme.sh
+./acme.sh --install -m your@email.com
+```
+
+Follow this [guide](https://www.dynu.com/resources/api/documentation) to get client_id and secret. Then replace in commands
+```bash
+export Dynu_ClientId="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+export Dynu_Secret="yyyyyyyyyyyyyyyyyyyyyyyyy"
+acme.sh --issue --dns dns_dynu -d example.com -d www.example.com
+```
