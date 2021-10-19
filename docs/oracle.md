@@ -112,4 +112,4 @@ export Dynu_ClientId="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 export Dynu_Secret="yyyyyyyyyyyyyyyyyyyyyyyyy"
 acme.sh --issue --dns dns_dynu -d example.com -d www.example.com
 ```
-[Previos - Raspberrypi 3 to setup Openvpn + Pihole + DNS-over-HTTPS](https://quyentruong.github.io/Raspberrypi-3-Openvpn-Pihole-DNS-over-HTTPS/)
+[Previous - Raspberrypi 3 to setup Openvpn + Pihole + DNS-over-HTTPS](https://quyentruong.github.io/Raspberrypi-3-Openvpn-Pihole-DNS-over-HTTPS/)
