@@ -65,7 +65,7 @@ By default, the OS doesn't allow tun0 interface. We need tun0 to allow openvpn a
 ```bash
 sudo su - root
 iptables -I INPUT -i tun0 -m comment --comment "# enable tun0 for pihole #" -j ACCEPT
-iptables-save > /etc/pihole/rules.v4
+iptables-save > /etc/iptables/rules.v4
 ```
 ## 7. Access web page on Internet [Optional]
 
