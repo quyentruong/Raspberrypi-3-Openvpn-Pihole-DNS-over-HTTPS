@@ -31,7 +31,8 @@ curl -L https://install.pivpn.io | bash
 ### 3b. Choose WireGuard
 * Keep default setting or you can change to different port.
 
-* After finished, reboot the instance to let tun0 or wg0 show up when setup pihole.
+
+***After finished, reboot the instance to let tun0 or wg0 show up when setup pihole.***
 
 ```bash
 sudo reboot
