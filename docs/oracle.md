@@ -1,4 +1,4 @@
-# Guide for Oracle Cloud to setup Openvpn + Pihole
+# Guide for Oracle Cloud to setup PiVPN + Pihole
 
 ## 1. Prerequisite
 * Oracle Cloud free tier: https://www.oracle.com/cloud/free
@@ -18,16 +18,20 @@
 
 * To connect to the instance, follow this [guide](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/accessinginstance.htm)
 
-## 3. Install Openvpn
+## 3. Install PiVPN
 * I used PiVPN. Need root access. Copy these commands in terminal.
 
 ```bash
 sudo su - root
 curl -L https://install.pivpn.io | bash
 ```
-
+### 3a. Choose OpenVPN
 * For step-by-step, [watch this video](https://www.youtube.com/watch?v=9RSHSt4RuLk). I used default setting like the video. Only part about ip, I chose 10.8.0.1. And about port, I chose default port 1194.
-* After finished, reboot Pi to let tun0 show up when setup pihole.
+
+### 3b. Choose WireGuard
+* Keep default setting or you can change to different port.
+
+* After finished, reboot the instance to let tun0 or wg0 show up when setup pihole.
 
 ```bash
 sudo reboot
@@ -41,7 +45,7 @@ Copy these commands in terminal.
 sudo su - root
 curl -sSL https://install.pi-hole.net | bash
 ```
-Make sure choose tun0. Everything else should be similar to the last post
+Make sure choose tun0 or wg0. Everything else should be similar to the last post
 
 ## 5. Setup OpenVPN to run with Pihole
 
@@ -51,8 +55,9 @@ Copy these commands in terminal.
 sudo su - root
 curl -L https://install.pivpn.io | bash
 ```
-* Then choose Reconfigure. Just go through the setup again. There will be a message that detects pihole. It will help configure openvpn to work with pihole. Then reboot.
+* Then choose Reconfigure. Just go through the setup again. There will be a message that detects pihole. It will help configure pivpn to work with pihole. Then reboot.
 
+### 5a. Only for OpenVPN (optional)
 * If you want VPN only run query (it may help run faster if the upload speed of server is slow)
   * Edit the file /etc/openvpn/server.conf via `sudo nano /etc/openvpn/server.conf`.  
   * Comment out `push "redirect-gateway def1"`.
@@ -62,16 +67,28 @@ curl -L https://install.pivpn.io | bash
 ## 6. Allow port in iptables
 By default, the OS doesn't allow tun0 interface. We need tun0 to allow openvpn and pihole work. [More information](https://docs.pi-hole.net/guides/vpn/openvpn/firewall/)
 
+### 6a. OpenVPN
 ```bash
 sudo su - root
 iptables -I INPUT -i tun0 -m comment --comment "# enable tun0 for pihole #" -j ACCEPT
 iptables-save > /etc/iptables/rules.v4
 ```
+
+### 6b. WireGuard
+```bash
+sudo su - root
+iptables -I INPUT -i wg0 -m comment --comment "# enable wg0 for pihole #" -j ACCEPT
+iptables-save > /etc/iptables/rules.v4
+```
+
 ## 7. Access web page on Internet [Optional]
+Run `ip addr` to check interface ens3 or enp0s3 
+
+Then Replace interface name to `xxxx`
 
 Need to allow port 80 in iptables
 ```bash
-iptables -I INPUT -i ens3 -p tcp --dport 80 -m comment --comment "# http #" -j ACCEPT
+iptables -I INPUT -i xxxx -p tcp --dport 80 -m comment --comment "# http #" -j ACCEPT
 ```
 
 * In the Instance information, click on `subnet-xxx` -> `Default Security List xxx` -> `Add Ingrss Rules`
