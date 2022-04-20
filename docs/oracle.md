@@ -112,4 +112,12 @@ export Dynu_ClientId="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 export Dynu_Secret="yyyyyyyyyyyyyyyyyyyyyyyyy"
 acme.sh --issue --dns dns_dynu -d example.com -d www.example.com
 ```
+## 10. WireGuard Allow Local Access [Optional]
+
+https://techjourney.net/how-to-allow-local-network-when-using-wireguard-vpn-tunnel-in-windows-10/
+
+Change AllowedIPs = 0.0.0.0/0, ::/0
+To:
+AllowedIPs = 0.0.0.0/1, 128.0.0.0/1, ::/1, 8000::/1
+
 [Previous - Raspberrypi 3 to setup Openvpn + Pihole + DNS-over-HTTPS](https://quyentruong.github.io/Raspberrypi-3-Openvpn-Pihole-DNS-over-HTTPS/)
